@@ -1,10 +1,12 @@
-# CIM Lab 4: Diffusion Models 
+# CIM Lab 4: Diffusion Models
+
 ## Introduction
 
-Today we will learn about diffusion models. Diffusion model are a class of generative models that have superseded GANs as SOTA image generation models and have wide utility in filed like inverse problems, where they are use as versitile priors or arbitrary domains. 
-
+Today we will learn about diffusion models. Diffusion models are a class of generative models that have superseded GANs as the state of the art in image generation, and they have wide utility in fields like inverse problems, where they are used as versatile priors for arbitrary domains.
 
 ## Setup
+
+Install the dependencies with [uv](https://docs.astral.sh/uv/):
 
 ```bash
 uv sync
@@ -12,7 +14,7 @@ uv sync
 
 ## Image generation with Diffusion Models
 
-We will begin with simple image generation of a pre-trained model. The process of training and running diffusion models has been greatly improved with the advent huggingface's [diffuser library](https://huggingface.co/docs/diffusers/index).
+We will begin with simple image generation using a pre-trained model. Training and running diffusion models has become much easier with the advent of Hugging Face's [diffusers library](https://huggingface.co/docs/diffusers/index).
 
 The script `src/unconditional.py` downloads a pre-trained model from the [Hugging Face Hub](https://huggingface.co/models?other=diffusers:DDPMPipeline), starts from pure Gaussian noise and iteratively denoises it to produce new images.
 
@@ -22,7 +24,7 @@ We will start with [`google/ddpm-cifar10-32`](https://huggingface.co/google/ddpm
 uv run src/unconditional.py
 ```
 
-The first run downloads the weights, and the generated images are saved to `outputs/unconditional_samples.png`. Note that the model is *unconditional*: we cannot ask it for a particular class, it simply samples from the distribution it was trained on. The script has a few options you can play with:
+The first run downloads the weights, and the generated images are saved to `outputs/unconditional_samples.png`. Note that the model is *unconditional*: we cannot ask it for a particular class; it simply samples from the distribution it was trained on. The script has a few options you can play with:
 
 ```bash
 # Different random noise gives different images
@@ -86,9 +88,6 @@ uv run src/interpolate.py --scheduler ddpm --steps 1000
 ```
 
 This will *not* give a smooth path, even with spherical interpolation. Run it a few times, including twice with identical arguments. Why does it fail? Look at what the DDPM update does at each step compared to DDIM, and think about what it means to say that the initial noise "determines" the image.
-
-
-
 
 ## Conditional generation
 
@@ -189,7 +188,7 @@ uv run src/train.py --epochs 5
 
 This trains the model for 5 passes through the 60000 MNIST images, then generates 8 examples of each digit starting from pure noise.
 
-> **Note:** On a GPU one epoch training should not take more than a couple of minutes per epoch and the final sampling about 1 more minute. **A CPU will be considerably slower**. Start it, then read on or work on the questions while it runs.
+> **Note:** On a GPU each epoch should take no more than a couple of minutes, and the final sampling about one more minute. **A CPU will be considerably slower**. Start it, then read on or work on the questions while it runs.
 
 The outputs are written to `outputs/training/`:
 
@@ -200,5 +199,6 @@ The outputs are written to `outputs/training/`:
 
 Look at `conditional_samples.png` after 1 epoch and after 5 epochs (`--epochs 1 --out outputs/one_epoch`). How does the quality change? Does the model respect the class label? (After 1 epoch you should see digit-like strokes that mostly ignore the row's label; after 5 epochs most rows contain recognisable digits of the right class, with a few messy samples left.)
 
-## Questions to ponder for next week? 
+## Questions to ponder for next week
+
 - How could we add additional information into the reverse diffusion process to affect the outcome of the generation process?
